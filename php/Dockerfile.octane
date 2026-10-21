@@ -1,8 +1,8 @@
-ARG SWOOLE_VERSION=5.0
-ARG PHP_VERSION=8.2
+ARG FRANKENPHP_VERSION=1.13
+ARG PHP_VERSION=8.5
 
-# https://hub.docker.com/r/phpswoole/swoole
-FROM phpswoole/swoole:${SWOOLE_VERSION}-php${PHP_VERSION}-alpine
+# https://hub.docker.com/r/dunglas/frankenphp
+FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-alpine
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
@@ -12,15 +12,16 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
         gd \
         gettext \
         intl \
-        mcrypt \
         mysqli \
         opcache \
         pcntl \
+        pdo_mysql \
+        redis \
         yaml \
         zip
 
 WORKDIR /var/www/html
 
-ENTRYPOINT ["php", "-d", "variables_order=EGPCS", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=80"]
+ENTRYPOINT ["php", "artisan", "octane:frankenphp"]
 
 EXPOSE 80
